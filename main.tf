@@ -13,6 +13,21 @@ provider "aws" {
     )
   }
 }
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+
+  default_tags {
+    tags = merge(
+      {
+        Project     = var.project_name
+        Environment = var.environment
+        ManagedBy   = "terraform"
+      },
+      var.default_tags
+    )
+  }
+}
 
 data "aws_caller_identity" "current" {}
 
@@ -28,7 +43,9 @@ module "s3_static_website" {
 # WAF
 module "waf" {
   source = "./modules/waf"
-
+  providers = {
+    aws = aws.us_east_1
+  }
   project_name = var.project_name
 }
 
@@ -45,6 +62,11 @@ module "cloudfront" {
   project_name                   = var.project_name
 }
 
+# Logging Bucket
+module "s3_logging_bucket" {
+  source = "./modules/s3-logging-bucket"
+  project_name = var.project_name
+}
 
 # Upload Website Content
 resource "aws_s3_object" "index_html" {

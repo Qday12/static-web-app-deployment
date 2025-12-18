@@ -1,7 +1,7 @@
 resource "aws_wafv2_web_acl" "main" {
   name        = "${var.project_name}-waf"
   description = "WAF for ${var.project_name} with rate limiting"
-  scope 
+  scope       = "CLOUDFRONT"
 
   default_action {
     allow {}
