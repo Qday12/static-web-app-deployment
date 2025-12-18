@@ -48,3 +48,9 @@ variable "max_ttl" {
   type        = number
   default     = 86400
 }
+
+variable "web_acl_arn"{
+  description = "The ARN of the WAF Web ACL to associate with the CloudFront"
+  type        = string
+  default     = null
+}

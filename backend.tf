@@ -10,12 +10,12 @@
 # =============================================================================
 
 # Uncomment this block after creating the backend resources
- terraform {
-   backend "s3" {
-     bucket         = "static-web-app-deployment-2115-state"    # Change this
-     key            = "static-website/terraform.tfstate"
-     region         = "eu-central-1"
-     encrypt        = true
-     dynamodb_table = "terraform-state-lock"           # For state locking
-   }
- }
+terraform {
+  backend "s3" {
+    bucket         = "static-web-app-deployment-2115-state" # Change this
+    key            = "static-website/terraform.tfstate"
+    region         = "eu-central-1" # Change this
+    encrypt        = true
+    dynamodb_table = "terraform-state-lock" # For state locking
+  }
+}

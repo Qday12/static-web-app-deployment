@@ -14,6 +14,7 @@ resource "aws_cloudfront_distribution" "website" {
   default_root_object = var.default_root_object
   comment             = "CloudFront distribution for ${var.project_name}"
   price_class         = var.price_class
+  web_acl_id          = var.web_acl_arn
 
   # Wait for deployment to complete
   wait_for_deployment = true
@@ -86,7 +87,7 @@ resource "aws_cloudfront_distribution" "website" {
     response_page_path    = "/error.html"
     error_caching_min_ttl = 10
   }
-  
+
 
   # Restrictions
   restrictions {

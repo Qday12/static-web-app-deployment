@@ -25,16 +25,24 @@ module "s3_static_website" {
   website_error_document = var.website_error_document
 }
 
+# WAF
+module "waf" {
+  source = "./modules/waf"
+
+  project_name = var.project_name
+}
+
 # CloudFront
 module "cloudfront" {
   source = "./modules/cloudfront"
 
-  s3_bucket_id                  = module.s3_static_website.bucket_id
-  s3_bucket_arn                 = module.s3_static_website.bucket_arn
+  web_acl_arn                    = module.waf.web_acl_arn
+  s3_bucket_id                   = module.s3_static_website.bucket_id
+  s3_bucket_arn                  = module.s3_static_website.bucket_arn
   s3_bucket_regional_domain_name = module.s3_static_website.bucket_regional_domain_name
-  default_root_object           = var.website_index_document
-  price_class                   = var.cloudfront_price_class
-  project_name                  = var.project_name
+  default_root_object            = var.website_index_document
+  price_class                    = var.cloudfront_price_class
+  project_name                   = var.project_name
 }
 
 
@@ -65,8 +73,8 @@ resource "aws_s3_bucket_policy" "cloudfront_access" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AllowCloudFrontServicePrincipal"
-        Effect    = "Allow"
+        Sid    = "AllowCloudFrontServicePrincipal"
+        Effect = "Allow"
         Principal = {
           Service = "cloudfront.amazonaws.com"
         }
