@@ -13,7 +13,6 @@ static-web-app-deployment/backend.tf        # remote state and locking configura
 - AWS CLI configured with appropriate credentials
 
 # Start
-
 1. clone and configure
 ```bash
 git clone https://github.com/Qday12/static-web-app-deployment
