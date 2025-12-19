@@ -60,6 +60,8 @@ module "cloudfront" {
   default_root_object            = var.website_index_document
   price_class                    = var.cloudfront_price_class
   project_name                   = var.project_name
+  logging_bucket_domain_name     = module.s3_logging_bucket.bucket_domain_name
+
 }
 
 # Logging Bucket

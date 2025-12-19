@@ -19,6 +19,16 @@ resource "aws_cloudfront_distribution" "website" {
   # Wait for deployment to complete
   wait_for_deployment = true
 
+
+  dynamic "logging_config" {
+    for_each = var.logging_bucket_domain_name != null ? [1] : []
+    content {
+      bucket          = var.logging_bucket_domain_name
+      prefix          = var.logging_prefix
+      include_cookies = false
+    }
+  }
+
   # Origin Configuration
   origin {
     domain_name              = var.s3_bucket_regional_domain_name

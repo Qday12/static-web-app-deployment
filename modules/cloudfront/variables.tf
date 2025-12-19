@@ -54,3 +54,16 @@ variable "web_acl_arn"{
   type        = string
   default     = null
 }
+
+variable "logging_bucket_domain_name" {
+  description = "Domain name of the S3 bucket for access logs"
+  type        = string
+  default     = null
+}
+
+variable "logging_prefix" {
+  description = "Prefix for CloudFront access logs"
+  type        = string
+  default     = "cloudfront/"
+  }
+

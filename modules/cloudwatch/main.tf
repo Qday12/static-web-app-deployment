@@ -34,7 +34,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           stat   = "Sum"
           period = 60
           metrics = [
-            ["AWS/WAFV2", "BlockedRequests", "WebACL", var.waf_web_acl_name, "Rule", "ALL", "Region", "us-east-1"]
+            ["AWS/WAFV2", "BlockedRequests", "WebACL", var.waf_web_acl_name, "Rule", "ALL", "Region", "Global"]
           ]
         }
       },
