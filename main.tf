@@ -67,6 +67,13 @@ module "s3_logging_bucket" {
   source = "./modules/s3-logging-bucket"
   project_name = var.project_name
 }
+# CloudWatch
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+  project_name               = var.project_name
+  cloudfront_distribution_id = module.cloudfront.distribution_id
+  waf_web_acl_name           = module.waf.web_acl_name
+}
 
 # Upload Website Content
 resource "aws_s3_object" "index_html" {
