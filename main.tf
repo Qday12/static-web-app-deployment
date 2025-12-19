@@ -29,8 +29,6 @@ provider "aws" {
   }
 }
 
-data "aws_caller_identity" "current" {}
-
 # S3
 module "s3_static_website" {
   source = "./modules/s3-static-website"
