@@ -49,7 +49,7 @@ variable "max_ttl" {
   default     = 86400
 }
 
-variable "web_acl_arn"{
+variable "web_acl_arn" {
   description = "The ARN of the WAF Web ACL to associate with the CloudFront"
   type        = string
   default     = null
@@ -65,5 +65,5 @@ variable "logging_prefix" {
   description = "Prefix for CloudFront access logs"
   type        = string
   default     = "cloudfront/"
-  }
+}
 
