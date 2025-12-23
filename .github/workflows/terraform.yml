@@ -1,8 +1,3 @@
-# ===========================================
-# Project Workflow (GitHub Actions)
-# ===========================================
-# Save as: .github/workflows/deploy.yml
-
 name: Deploy Infrastructure
 
 on:
