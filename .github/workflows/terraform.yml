@@ -19,7 +19,7 @@ on:
 
 jobs:
   terraform:
-    uses: your-org/terraform-workflows/.github/workflows/terraform.yml@main
+    uses: Qday12/terraform-workflows/.github/workflows/terraform.yml@main
     with:
       terraform_root: '.'
       environment: 'dev'
