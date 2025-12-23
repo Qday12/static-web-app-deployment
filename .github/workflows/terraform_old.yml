@@ -1,7 +1,7 @@
 name: Terraform
 
 on:
-  push:
+  #push:
     #branches:
      # - main
   workflow_dispatch:
