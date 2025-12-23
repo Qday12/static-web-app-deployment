@@ -17,6 +17,10 @@ on:
         required: false
         default: false
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   terraform:
     uses: Qday12/terraform-workflows/.github/workflows/terraform.yml@main
