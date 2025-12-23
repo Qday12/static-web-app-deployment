@@ -19,11 +19,12 @@ on:
 
 jobs:
   terraform:
-    uses: Qday12/terraform-workflows/.github/workflows/terraform.yml@main
+    uses: your-org/terraform-workflows/.github/workflows/terraform.yml@main
     with:
       terraform_root: '.'
       environment: 'dev'
       aws_region: 'eu-central-1'
+      confirm_apply: ${{ inputs.confirm_apply }}
+    secrets:
       AWS_PLAN_ROLE_ARN: ${{ secrets.AWS_PLAN_ROLE_ARN }}
       AWS_APPLY_ROLE_ARN: ${{ secrets.AWS_APPLY_ROLE_ARN }}
-      confirm_apply: ${{ inputs.confirm_apply }}
