@@ -1,4 +1,9 @@
-name: Terraform
+# ===========================================
+# Project Workflow (GitHub Actions)
+# ===========================================
+# Save as: .github/workflows/deploy.yml
+
+name: Deploy Infrastructure
 
 on:
   push:
@@ -6,133 +11,19 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      apply_only:
-        description: 'Run apply at the end'
-        required: false
+      confirm_apply:
+        description: 'Run terraform apply'
         type: boolean
+        required: false
         default: false
-      #run_id:
-      #  description: 'Workflow run ID to download tfplan artifact from (required if apply_only is true)'
-      #  required: false
-      #  type: string
-
-env:
-  TF_VERSION: "1.6.0"
-  AWS_REGION: "eu-central-1"
 
 jobs:
-
-  init:
-    name: Terraform Init
-    runs-on: ubuntu-latest
-    #if: ${{ !inputs.apply_only }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
-        with:
-          tflint_version: latest
-
-      - name: Terraform Format Check
-        id: fmt
-        run: terraform fmt -check -recursive
-        continue-on-error: true
-
-      - name: Terraform Init
-        id: init
-        run: terraform init -backend=false 
-      #it ignores backend configuration for validation and formatting checks  
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-
-      - name: TFLint Init
-        run: tflint --init
-
-      - name: TFLint Run
-        id: tflint
-        run: tflint -f compact
-
-  plan:
-    name: Terraform Plan
-    runs-on: ubuntu-latest
-    needs: init
-    #if: ${{ !inputs.apply_only }}
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      #AWS CREDENTIALS
-      - name: Configure AWS Credentials (Plan Role)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_PLAN_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-      
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan
-
-      - name: Upload Terraform Plan
-        uses: actions/upload-artifact@v4
-        with:
-          name: tfplan
-          path: tfplan
-
-  apply:
-    name: Terraform Apply
-    runs-on: ubuntu-latest
-    needs: plan
-    permissions:
-      id-token: write
-      contents: read
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.apply_only }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      #AWS CREDENTIALS
-      - name: Configure AWS Credentials (Apply Role)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_APPLY_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v4
-        with:
-          name: tfplan
-          #run-id: ${{ inputs.run_id }}
-          #github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve tfplan
-
-
+  terraform:
+    uses: Qday12/terraform-workflows/.github/workflows/terraform.yml@main
+    with:
+      terraform_root: '.'
+      environment: 'dev'
+      aws_region: 'eu-central-1'
+      AWS_PLAN_ROLE_ARN: ${{ secrets.AWS_PLAN_ROLE_ARN }}
+      AWS_APPLY_ROLE_ARN: ${{ secrets.AWS_APPLY_ROLE_ARN }}
+      confirm_apply: ${{ inputs.confirm_apply }}
